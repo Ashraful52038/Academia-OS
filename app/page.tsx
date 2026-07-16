@@ -1,26 +1,34 @@
 "use client";
 
 import { useState } from "react";
-import { GraduationCap, Landmark, Users, Loader2 } from "lucide-react";
+import { Eye, EyeOff, GraduationCap, Landmark, Users, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { DEMO_CREDENTIALS, login, type UserRole } from "@/services/authService";
 
 export default function Home() {
+  const router = useRouter();
   // ১. ইউজার স্টেট এবং রোল ট্র্যাকিং (ইনপুটগুলো একদম খালি থাকবে)
   const [selectedRole, setSelectedRole] = useState<"teacher" | "student" | "dept-head">("teacher");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // ব্যাকএন্ড রিকোয়েস্টের লোডিং স্টেট
+  const [error, setError] = useState("");
 
   // ২. রোল পরিবর্তনের সাথে সাথে ইনপুট রিসেট করা (সিকিউরিটি ও ইউজার এক্সপেরিয়েন্সের জন্য ভালো প্র্যাকটিস)
-  const handleRoleChange = (role: "teacher" | "student" | "dept-head") => {
+  const handleRoleChange = (role: UserRole) => {
     setSelectedRole(role);
     setEmail("");
     setPassword("");
+    setShowPassword(false);
+    setError("");
   };
 
   // ৩. ব্যাকএন্ড এপিআই সাবমিট হ্যান্ডলার (অ্যাসিঙ্ক্রোনাস ফাংশন)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true); // লোডিং শুরু
+    setIsLoading(true);
+    setError("");
 
     // ব্যাকএন্ডে পাঠানোর জন্য পেলোড (Payload)
     const loginCredentials = {
@@ -29,25 +37,11 @@ export default function Home() {
       password: password,
     };
 
-    console.log("Submitting to backend API:", loginCredentials);
-
     try {
-      // এখানে ভবিষ্যতে আপনার ব্যাকএন্ড এপিআই কলটি হবে, যেমন:
-      // const response = await axios.post('/api/auth/login', loginCredentials);
-      
-      // ডেমো হিসেবে আমরা ১.৫ সেকেন্ডের একটি ফেক ডিলে (Delay) তৈরি করছি
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // এপিআই সাকসেসফুল হলে রাউটিং লজিক (Redirect):
-      // if (response.data.success) {
-      //   router.push(`/${selectedRole}/dashboard`);
-      // }
-      
-      alert(`Successfully submitted as ${selectedRole}! (Backend connection placeholder)`);
-
+      await login(loginCredentials);
+      router.push(`/${selectedRole}`);
     } catch (error) {
-      console.error("Login Error:", error);
-      // এখানে ইউজারকে এরর টোস্ট মেসেজ দেখাবেন
+      setError(error instanceof Error ? error.message : "Unable to sign in.");
     } finally {
       setIsLoading(false); // লোডিং শেষ
     }
@@ -150,6 +144,12 @@ export default function Home() {
             />
           </div>
 
+          {error && (
+            <p role="alert" className="text-xs text-red-600">
+              {error}
+            </p>
+          )}
+
           {/* পাসওয়ার্ড ইনপুট */}
           <div className="relative flex items-center">
             <span className="absolute left-4 text-gray-400">
@@ -158,14 +158,28 @@ export default function Home() {
               </svg>
             </span>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}
-              className="w-full bg-[#f4f6f8] text-gray-700 pl-11 pr-4 py-2.5 sm:py-3 rounded-xl border border-transparent focus:border-gray-300 focus:bg-white focus:outline-none transition-all text-xs sm:text-sm disabled:opacity-50"
+              className="w-full bg-[#f4f6f8] text-gray-700 pl-11 pr-11 py-2.5 sm:py-3 rounded-xl border border-transparent focus:border-gray-300 focus:bg-white focus:outline-none transition-all text-xs sm:text-sm disabled:opacity-50"
               placeholder="Enter your password"
               required
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword((visible) => !visible)}
+              disabled={isLoading}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-pressed={showPassword}
+              className="absolute right-4 text-gray-400 transition-colors hover:text-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {showPassword ? (
+                <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" />
+              ) : (
+                <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
+              )}
+            </button>
           </div>
 
           {/* সাবমিট বাটন (লোডিং অ্যানিমেশনসহ) */}
@@ -190,10 +204,11 @@ export default function Home() {
           </button>
         </form>
 
-        {/* বটম ডেমো টেক্সট */}
-        <p className="text-center text-[10px] sm:text-xs text-gray-400 mt-4 sm:mt-5">
-          Secure authentication system ready for backend integration
-        </p>
+        <div className="mt-4 sm:mt-5 rounded-lg bg-[#f4f6f8] px-3 py-2 text-center text-[10px] sm:text-xs text-gray-500">
+          <p className="font-semibold text-gray-600">Demo login</p>
+          <p>{DEMO_CREDENTIALS.email}</p>
+          <p>{DEMO_CREDENTIALS.password}</p>
+        </div>
       </div>
     </div>
   );
