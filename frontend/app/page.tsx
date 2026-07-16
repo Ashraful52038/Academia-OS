@@ -1,28 +1,27 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation"; // ১. রাউটার ইম্পোর্ট
 import { GraduationCap, Landmark, Users, Loader2 } from "lucide-react";
 
 export default function Home() {
-  // ১. ইউজার স্টেট এবং রোল ট্র্যাকিং (ইনপুটগুলো একদম খালি থাকবে)
+  const router = useRouter(); // ২. রাউটার ইনিশিয়ালাইজ
+  
   const [selectedRole, setSelectedRole] = useState<"teacher" | "student" | "dept-head">("teacher");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // ব্যাকএন্ড রিকোয়েস্টের লোডিং স্টেট
+  const [isLoading, setIsLoading] = useState(false);
 
-  // ২. রোল পরিবর্তনের সাথে সাথে ইনপুট রিসেট করা (সিকিউরিটি ও ইউজার এক্সপেরিয়েন্সের জন্য ভালো প্র্যাকটিস)
   const handleRoleChange = (role: "teacher" | "student" | "dept-head") => {
     setSelectedRole(role);
     setEmail("");
     setPassword("");
   };
 
-  // ৩. ব্যাকএন্ড এপিআই সাবমিট হ্যান্ডলার (অ্যাসিঙ্ক্রোনাস ফাংশন)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true); // লোডিং শুরু
+    setIsLoading(true);
 
-    // ব্যাকএন্ডে পাঠানোর জন্য পেলোড (Payload)
     const loginCredentials = {
       role: selectedRole,
       email: email,
@@ -32,24 +31,17 @@ export default function Home() {
     console.log("Submitting to backend API:", loginCredentials);
 
     try {
-      // এখানে ভবিষ্যতে আপনার ব্যাকএন্ড এপিআই কলটি হবে, যেমন:
-      // const response = await axios.post('/api/auth/login', loginCredentials);
-      
-      // ডেমো হিসেবে আমরা ১.৫ সেকেন্ডের একটি ফেক ডিলে (Delay) তৈরি করছি
+      // ডেমো API ফেক ডিলে
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      // এপিআই সাকসেসফুল হলে রাউটিং লজিক (Redirect):
-      // if (response.data.success) {
-      //   router.push(`/${selectedRole}/dashboard`);
-      // }
-      
-      alert(`Successfully submitted as ${selectedRole}! (Backend connection placeholder)`);
+      // ৩. সফল সাবমিট হওয়ার পর সিলেক্টেড রোলের ড্যাশবোর্ড পাথে পাঠানো হচ্ছে
+      // Student-এর জন্য রিডাইরেক্ট হবে: /student
+      router.push(`/${selectedRole}`);
 
     } catch (error) {
       console.error("Login Error:", error);
-      // এখানে ইউজারকে এরর টোস্ট মেসেজ দেখাবেন
     } finally {
-      setIsLoading(false); // লোডিং শেষ
+      setIsLoading(false);
     }
   };
 
@@ -78,7 +70,6 @@ export default function Home() {
 
         {/* রোল সিলেক্টর বাটনসমূহ */}
         <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-6">
-          {/* Teacher Button */}
           <button
             type="button"
             disabled={isLoading}
@@ -93,7 +84,6 @@ export default function Home() {
             <span className="text-[11px] sm:text-xs">Teacher</span>
           </button>
 
-          {/* Student Button */}
           <button
             type="button"
             disabled={isLoading}
@@ -108,7 +98,6 @@ export default function Home() {
             <span className="text-[11px] sm:text-xs">Student</span>
           </button>
 
-          {/* Dept. Head Button */}
           <button
             type="button"
             disabled={isLoading}
@@ -126,7 +115,6 @@ export default function Home() {
 
         {/* ইনপুট ফর্ম */}
         <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
-          {/* ইমেইল ইনপুট (ডায়নামিক প্লেসহোল্ডারসহ) */}
           <div className="relative flex items-center">
             <span className="absolute left-4 text-gray-400">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
@@ -150,7 +138,6 @@ export default function Home() {
             />
           </div>
 
-          {/* পাসওয়ার্ড ইনপুট */}
           <div className="relative flex items-center">
             <span className="absolute left-4 text-gray-400">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
@@ -168,7 +155,6 @@ export default function Home() {
             />
           </div>
 
-          {/* সাবমিট বাটন (লোডিং অ্যানিমেশনসহ) */}
           <button
             type="submit"
             disabled={isLoading}
@@ -190,7 +176,6 @@ export default function Home() {
           </button>
         </form>
 
-        {/* বটম ডেমো টেক্সট */}
         <p className="text-center text-[10px] sm:text-xs text-gray-400 mt-4 sm:mt-5">
           Secure authentication system ready for backend integration
         </p>
