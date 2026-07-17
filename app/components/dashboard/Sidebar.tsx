@@ -2,7 +2,19 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, BookOpen, CalendarCheck, GraduationCap, LogOut, Menu, X } from "lucide-react";
+import {
+  BarChart3,
+  BookOpen,
+  CalendarCheck,
+  CalendarRange,
+  ClipboardList,
+  GraduationCap,
+  LogOut,
+  Menu,
+  User,
+  Users,
+  X,
+} from "lucide-react";
 import { useState } from "react";
 
 const roleConfig = {
@@ -13,6 +25,7 @@ const roleConfig = {
       { href: "/teacher", label: "Overview", icon: BarChart3 },
       { href: "/teacher/attendance", label: "Attendance", icon: CalendarCheck },
       { href: "/teacher/thesis-sync", label: "Thesis Sync", icon: GraduationCap },
+      { href: "/teacher/profile", label: "Profile", icon: User },
     ],
   },
   student: {
@@ -25,12 +38,22 @@ const roleConfig = {
       { href: "/student/resource-hub", label: "Resource Hub", icon: BookOpen },
     ],
   },
+  "dept-head": {
+    portalLabel: "Dept. Head Portal",
+    homeHref: "/dept-head",
+    links: [
+      { href: "/dept-head", label: "Overview", icon: BarChart3 },
+      { href: "/dept-head/faculty", label: "Faculty", icon: Users },
+      { href: "/dept-head/routine", label: "Routine", icon: CalendarRange },
+      { href: "/dept-head/obe-reports", label: "OBE Reports", icon: ClipboardList },
+    ],
+  },
 } as const;
 
 export default function Sidebar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const role = pathname.startsWith("/student") ? "student" : "teacher";
+  const role = pathname.startsWith("/student") ? "student" : pathname.startsWith("/dept-head") ? "dept-head" : "teacher";
   const { portalLabel, homeHref, links } = roleConfig[role];
 
   const navigation = (
