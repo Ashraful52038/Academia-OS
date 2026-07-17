@@ -2,36 +2,54 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, CalendarCheck, GraduationCap, LogOut, Menu, X } from "lucide-react";
+import { BarChart3, BookOpen, CalendarCheck, GraduationCap, LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
 
-const teacherLinks = [
-  { href: "/teacher", label: "Overview", icon: BarChart3 },
-  { href: "/teacher/attendance", label: "Attendance", icon: CalendarCheck },
-  { href: "/teacher/thesis-sync", label: "Thesis Sync", icon: GraduationCap },
-];
+const roleConfig = {
+  teacher: {
+    portalLabel: "Teacher Portal",
+    homeHref: "/teacher",
+    links: [
+      { href: "/teacher", label: "Overview", icon: BarChart3 },
+      { href: "/teacher/attendance", label: "Attendance", icon: CalendarCheck },
+      { href: "/teacher/thesis-sync", label: "Thesis Sync", icon: GraduationCap },
+    ],
+  },
+  student: {
+    portalLabel: "Student Portal",
+    homeHref: "/student",
+    links: [
+      { href: "/student", label: "Overview", icon: BarChart3 },
+      { href: "/student/attendance", label: "Attendance", icon: CalendarCheck },
+      { href: "/student/thesis-tracker", label: "Thesis Tracker", icon: GraduationCap },
+      { href: "/student/resource-hub", label: "Resource Hub", icon: BookOpen },
+    ],
+  },
+} as const;
 
 export default function Sidebar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const role = pathname.startsWith("/student") ? "student" : "teacher";
+  const { portalLabel, homeHref, links } = roleConfig[role];
 
   const navigation = (
     <>
       <div className="border-b border-white/10 px-6 py-6">
-        <Link href="/teacher" className="flex items-center gap-3" onClick={() => setOpen(false)}>
+        <Link href={homeHref} className="flex items-center gap-3" onClick={() => setOpen(false)}>
           <span className="grid h-10 w-10 place-items-center rounded-full bg-[#cda252] text-[#07162c]">
             <GraduationCap className="h-5 w-5" />
           </span>
           <div>
             <p className="font-serif text-xl font-semibold">AcademiaOS</p>
-            <p className="text-xs text-slate-400">Teacher Portal</p>
+            <p className="text-xs text-slate-400">{portalLabel}</p>
           </div>
         </Link>
       </div>
 
-      <nav className="flex-1 space-y-1 p-4" aria-label="Teacher navigation">
-        {teacherLinks.map(({ href, label, icon: Icon }) => {
-          const active = href === "/teacher" ? pathname === href : pathname.startsWith(href);
+      <nav className="flex-1 space-y-1 p-4" aria-label={`${portalLabel} navigation`}>
+        {links.map(({ href, label, icon: Icon }) => {
+          const active = href === homeHref ? pathname === href : pathname.startsWith(href);
           return (
             <Link
               key={href}
