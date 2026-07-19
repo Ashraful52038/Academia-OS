@@ -12,10 +12,10 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // ব্যাকএন্ড রিকোয়েস্টের লোডিং স্টেট
+  const [isLoading, setIsLoading] = useState(false); // ব্যাকএন্ড রিকোয়েস্টের লোডিং স্টেট
   const [error, setError] = useState("");
 
-  // ২. রোল পরিবর্তনের সাথে সাথে ইনপুট রিসেট করা (সিকিউরিটি ও ইউজার এক্সপেরিয়েন্সের জন্য ভালো প্র্যাকটিস)
+  // ২. রোল পরিবর্তনের সাথে সাথে ইনপুট রিসেট করা (সিকিউরিটি ও ইউজার এক্সপেরিয়েন্সের জন্য ভালো প্র্যাকটিস)
   const handleRoleChange = (role: UserRole) => {
     setSelectedRole(role);
     setEmail("");
@@ -24,13 +24,11 @@ export default function Home() {
     setError("");
   };
 
-  // ৩. ব্যাকএন্ড এপিআই সাবমিট হ্যান্ডলার (অ্যাসিঙ্ক্রোনাস ফাংশন)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
-    // ব্যাকএন্ডে পাঠানোর জন্য পেলোড (Payload)
     const loginCredentials = {
       role: selectedRole,
       email: email,
@@ -43,13 +41,13 @@ export default function Home() {
     } catch (error) {
       setError(error instanceof Error ? error.message : "Unable to sign in.");
     } finally {
-      setIsLoading(false); // লোডিং শেষ
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-[#07162c] flex flex-col items-center justify-center text-white px-4 relative overflow-hidden">
-      
+
       {/* ব্যাকগ্রাউন্ড লাইনিং ইফেক্ট */}
       <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none"></div>
 
@@ -72,7 +70,6 @@ export default function Home() {
 
         {/* রোল সিলেক্টর বাটনসমূহ */}
         <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-6">
-          {/* Teacher Button */}
           <button
             type="button"
             disabled={isLoading}
@@ -87,7 +84,6 @@ export default function Home() {
             <span className="text-[11px] sm:text-xs">Teacher</span>
           </button>
 
-          {/* Student Button */}
           <button
             type="button"
             disabled={isLoading}
@@ -102,7 +98,6 @@ export default function Home() {
             <span className="text-[11px] sm:text-xs">Student</span>
           </button>
 
-          {/* Dept. Head Button */}
           <button
             type="button"
             disabled={isLoading}
@@ -120,7 +115,6 @@ export default function Home() {
 
         {/* ইনপুট ফর্ম */}
         <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
-          {/* ইমেইল ইনপুট (ডায়নামিক প্লেসহোল্ডারসহ) */}
           <div className="relative flex items-center">
             <span className="absolute left-4 text-gray-400">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
@@ -134,10 +128,10 @@ export default function Home() {
               disabled={isLoading}
               className="w-full bg-[#f4f6f8] text-gray-700 pl-11 pr-4 py-2.5 sm:py-3 rounded-xl border border-transparent focus:border-gray-300 focus:bg-white focus:outline-none transition-all text-xs sm:text-sm disabled:opacity-50"
               placeholder={
-                selectedRole === "teacher" 
-                  ? "Enter teacher email..." 
-                  : selectedRole === "student" 
-                    ? "Enter student email..." 
+                selectedRole === "teacher"
+                  ? "Enter teacher email..."
+                  : selectedRole === "student"
+                    ? "Enter student email..."
                     : "Enter department head email..."
               }
               required
@@ -150,7 +144,7 @@ export default function Home() {
             </p>
           )}
 
-          {/* পাসওয়ার্ড ইনপুট */}
+          {/* পাসওয়ার্ড ইনপুট */}
           <div className="relative flex items-center">
             <span className="absolute left-4 text-gray-400">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
@@ -182,7 +176,6 @@ export default function Home() {
             </button>
           </div>
 
-          {/* সাবমিট বাটন (লোডিং অ্যানিমেশনসহ) */}
           <button
             type="submit"
             disabled={isLoading}
