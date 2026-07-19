@@ -1,35 +1,36 @@
-AcademiaOS
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-University Department Management System — a single platform that digitizes the day-to-day academic workflow of a university department: live classes, attendance, syllabus tracking, thesis supervision, resource sharing, and OBE reporting.
+## Getting Started
 
-AcademiaOS replaces the fragmented, paper- and email-based processes of a university department — manual attendance sheets, scattered notes, ad-hoc thesis feedback — with one responsive web platform built around three role-based experiences: Teacher, Student, and Department Head.
+First, run the development server:
 
-Key Features
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-Teacher
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-Live Smart Class sessions — session timer, self-refreshing QR attendance code, and a "Lecture Log" syllabus checklist teachers can extend on the fly
-Course & syllabus management with a full student roster per course
-Thesis supervision — milestone tracking and feedback per student
-OBE (Outcome Based Education) course-outcome attainment view
-Resource upload (notes/lab sheets) and course announcements
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Learn More
 
-Student
+To learn more about Next.js, take a look at the following resources:
 
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-Next-class card, weekly timetable, and real-time attendance/CGPA stats
-Resource Hub — notes and lab sheets organized by course code
-Question Bank — previous year questions & model answers by year
-Thesis progress tracker with supervisor feedback
-Role-based notifications, including announcements pushed by teachers and the department head
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
+## Deploy on Vercel
 
-Department Head / Admin
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-
-Faculty directory with complete profiles (contact info, expertise, syllabus-completion trend)
-One-click OBE report generation
-Conflict-free routine view with automatic clash detection
-Department-wide announcements to students
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
